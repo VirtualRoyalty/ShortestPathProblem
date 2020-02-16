@@ -6,6 +6,7 @@ ALL PAIRS SHORTEST PATH PROBLEM
 - Johnson (A* modification)
 
 **TODO:**
-- there 
-- is 
-- a list of what we have to do
+*Vadim*
+- Floyd
+*Ilya*
+- smt u should do
