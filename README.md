@@ -5,8 +5,10 @@ ALL PAIRS SHORTEST PATH PROBLEM
 - Johnson (dijkstra + bellman-ford)
 - Johnson (A* modification)
 
-**TODO:**
-*Vadim*
+**TODO:** 
+
+<br> *Vadim:* 
 - Floyd
-*Ilya*
+
+<br> *Ilya:* 
 - smt u should do
