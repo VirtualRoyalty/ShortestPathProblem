@@ -16,6 +16,16 @@ from importlib import reload  # Python 3.4+ only.
 #jsp = reload(jsp)            # if local changes
 
 johnson = jsp.JohnsonSP(G)
-j_paths = johnson.get_path()
+```
+## Johnson all shortest path algorithm by Dijkstra
+```
+j_paths = johnson.get_path_by_dijkstra()
+```
+## Johnson all shortest path algorithm by Astar (A*)
+```
+a_star_paths = johnson.get_path_by_astar()
+```
+## Default networkX Johnson algoritm checking
+```
 nx_j_paths = nx.johnson(G)
 ```
