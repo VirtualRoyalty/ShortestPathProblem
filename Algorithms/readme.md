@@ -27,5 +27,5 @@ a_star_paths = johnson.get_path_by_astar()
 ```
 ## Default networkX Johnson algoritm checking
 ```
-a_star_paths = johnson.get_path_by_astar()
+nx_j_paths = nx.johnson(G)
 ```
