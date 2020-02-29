@@ -26,7 +26,7 @@ class JohnsonSP:
         return paths
 
     def dist_path_by_astar(self, v):
-        return {u_i: astar.astar_path(self.G, v, u_i) for u_i in self.G}
+        return {u_i: astar.astar_path(self.G, v, u_i, weight=self.new_weight) for u_i in self.G}
 
     def get_path_by_dijkstra(self):
         return {v: self.dist_path_by_dijkstra(v) for v in self.G}

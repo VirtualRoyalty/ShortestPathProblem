@@ -1,3 +1,4 @@
+import copy
 import networkx as nx
 from collections import defaultdict
 
@@ -33,13 +34,13 @@ class FloydSP:
                         pred[u][v] = pred[w][v]
         return dict(pred), dict(dist)
 
-
     def get_path_from_predcessor(self,predecessors):
+        all_shortest_path = {}
         shortest_path_dct = {}
         for source in self.G:
             for target in self.G:
                 if source == target:
-                    shortest_path_dct[(source,target)] = [target]
+                    shortest_path_dct[source] = [target]
                     continue
                 prev = predecessors[source]
                 curr = prev[target]
@@ -47,5 +48,6 @@ class FloydSP:
                 while curr != source:
                     curr = prev[curr]
                     path.append(curr)
-                shortest_path_dct[(source,target)] = list(reversed(path))
-        return shortest_path_dct
+                shortest_path_dct[target] = list(reversed(path))
+            all_shortest_path[source] = copy.copy(shortest_path_dct)
+        return all_shortest_path
