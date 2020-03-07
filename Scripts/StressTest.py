@@ -6,6 +6,7 @@ from Algorithms import JohnsonSP as jsp
 from Algorithms import FloydSP as fsp
 #from importlib import reload  # Python 3.4+ only.
 from datetime import datetime as time
+import progressbar
 
 class StressTest: 
     def __init__(self, verbose = False):
@@ -18,7 +19,9 @@ class StressTest:
 
     def run(self, number_of_iterations, max_nodes, max_edges):
         start_time = time.now()
+        bar = progressbar.ProgressBar(max_value=progressbar.UnknownLength)
         for i in range(number_of_iterations):
+            bar.update(i)
             generator = gg.GraphGenerator(max_nodes, max_edges)
             self.G = generator.generate_weighted_graph(verbose = False)
             johnson_algorithm = jsp.JohnsonSP(self.G)
