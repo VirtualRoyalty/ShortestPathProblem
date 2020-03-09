@@ -5,7 +5,6 @@ from collections import defaultdict
 
 class FloydSP:
 
-
     def __init__(self,G):
         self.dist = defaultdict(lambda : defaultdict(lambda: float('inf')))
         for u in G:
