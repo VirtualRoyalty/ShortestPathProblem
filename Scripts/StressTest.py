@@ -6,6 +6,7 @@ from Algorithms import JohnsonSP as jsp
 from Algorithms import FloydSP as fsp
 #from importlib import reload  # Python 3.4+ only.
 from datetime import datetime as time
+import random
 import progressbar
 
 class StressTest: 
@@ -17,19 +18,25 @@ class StressTest:
         self.working_time = 0
         self.G = {}
 
-    def run(self, number_of_iterations, max_nodes, max_edges):
+    def run(self, number_of_iterations, max_nodes, max_edges, heuristic=None):
         start_time = time.now()
         bar = progressbar.ProgressBar(max_value=progressbar.UnknownLength)
         for i in range(number_of_iterations):
             bar.update(i)
             generator = gg.GraphGenerator(max_nodes, max_edges)
             self.G = generator.generate_weighted_graph(verbose = False)
+
             johnson_algorithm = jsp.JohnsonSP(self.G)
-            
+
             floyd_algorithm = fsp.FloydSP(self.G)
             pred, floyd_dist = floyd_algorithm.floyd_predecessor_and_distance()
             floyd_shortest_paths = floyd_algorithm.get_path_from_predcessor(pred)
-            johnsons_shortest_paths = johnson_algorithm.get_path_by_dijkstra()
+            
+            if heuristic:
+                self.get_G_coord()
+                johnsons_shortest_paths = johnson_algorithm.get_path_by_astar(heuristic)
+            else:
+                johnsons_shortest_paths = johnson_algorithm.get_path_by_dijkstra()
             
             # if path dicts are not equal, then find collisions
             # and check path len node by node
@@ -44,7 +51,12 @@ class StressTest:
         if self.verbose:
             self.print_statistic()
         return self.error_graphs
-            
+    
+    def get_G_coord(self, min_coord=0, max_coord=100):
+        for i in range(len(self.G)):
+            self.G.nodes[i]['coord'] = (random.randint(min_coord, max_coord), \
+                                   random.randint(min_coord, max_coord))
+
     def is_equal_path_length(self, floyd_dist, floyd_shortest_paths, johnson_shortest_paths):
         # find collision
         for i in range(len(self.G)):
@@ -52,8 +64,9 @@ class StressTest:
                 if floyd_shortest_paths[i][j] != johnson_shortest_paths[i][j]:
                     floyd_path_length, johnson_path_lenght = \
                     self.get_path_lengths(floyd_shortest_paths[i][j], floyd_dist, johnson_shortest_paths[i][j])
+                    print("lens:", floyd_path_length, johnson_path_lenght)
                     return floyd_path_length == johnson_path_lenght
-                    
+
     def get_path_lengths(self, floyd_shortest_path, dist_floyd, johnson_shortest_path):
         # go through path lists and accumulate weights of edges
         floyd_path_length, johnson_path_lenght = 0, 0
@@ -61,6 +74,7 @@ class StressTest:
             floyd_path_length += dist_floyd[floyd_shortest_path[i]][floyd_shortest_path[i + 1]]
         for i in range(0, len(johnson_shortest_path) - 1):
             johnson_path_lenght += self.G[johnson_shortest_path[i]][johnson_shortest_path[i + 1]]['weight']
+        print("floyd: {} \njohnson: {}\n len: {} {} \n".format(floyd_shortest_path, johnson_shortest_path, floyd_path_length, johnson_path_lenght, ))
         return floyd_path_length, johnson_path_lenght
 
     def print_statistic(self):
