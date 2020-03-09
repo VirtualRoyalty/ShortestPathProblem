@@ -13,3 +13,6 @@ ALL PAIRS SHORTEST PATH PROBLEM
 
 <br> *Ilya:* 
 - Johnson ***testing required [WIP]***
+- Johnson Dijkstra mod ***testing required [WIP]***
+- Johnson Astar mod ***testing required [WIP]***
+- Stress tests ***implemented***

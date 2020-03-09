@@ -7,9 +7,9 @@ class GraphGenerator:
     def __init__(self,max_nodes,max_edges):
         self.max_nodes = max_nodes
         self.max_edges = max_edges
-
-
-    def generate_weighted_graph(self,w_range=(0,100),seed=random.randint(0,1000),verbose=True):
+        
+        
+    def generate_weighted_graph(self,w_range=(0,100),seed=random.randint(0,1000),verbose=True, connectivity=True):
         n_nodes = self.max_nodes
         m_edges = self.max_edges
         p = 2 * m_edges / (n_nodes * (n_nodes - 1))
@@ -17,6 +17,9 @@ class GraphGenerator:
             print('Maximum Edges',n_nodes * (n_nodes - 1) / 2)
             print('Probability to make an edge',p)
         G = nx.generators.fast_gnp_random_graph(n_nodes, p, seed=seed)
+        if (connectivity):
+            while(not nx.is_connected(G)):
+                G = nx.generators.fast_gnp_random_graph(n_nodes, p, seed=seed)
         for (u,v,w) in G.edges(data=True):
             w['weight'] = random.randint(w_range[0],w_range[1])
         if verbose:
