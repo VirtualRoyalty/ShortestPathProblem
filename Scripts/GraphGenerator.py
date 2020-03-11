@@ -44,7 +44,7 @@ class GraphGenerator:
         return G
 
     @staticmethod
-    def get_distance(A, B, decimals=1):
+    def get_distance(A, B, decimals=5):
         dist = np.linalg.norm(np.array(list(A)) - np.array(list(B)))
         return round(dist, decimals)
 
