@@ -29,3 +29,10 @@ a_star_paths = johnson.get_path_by_astar()
 ```
 nx_j_paths = nx.johnson(G)
 ```
+## Seidel algorithm implementation (http://math.mit.edu/~rothvoss/18.304.1PM/Presentations/2-Chandler-slideslect2.pdf)
+```
+from Algorithms import SeidelSP as ssp
+# ssp = reload(ssp)             # if local changes
+seidel = ssp.SeidelSP()
+seidel.get_distance_matrix(A)
+```
