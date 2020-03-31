@@ -34,7 +34,7 @@ class GraphGenerator:
         G = nx.generators.fast_gnp_random_graph(n_nodes, p, seed=seed)
         if (connectivity):
             while(not nx.is_connected(G)):
-                G = nx.generators.fast_gnp_random_graph(n_nodes, p, seed=seed)
+                G = nx.generators.fast_gnp_random_graph(n_nodes, p, seed=random.randint(0,1000))
         for (u,v,w) in G.edges(data=True):
             w['weight'] = random.randint(w_range[0], w_range[1])
         if verbose:
@@ -44,7 +44,7 @@ class GraphGenerator:
         return G
 
     @staticmethod
-    def get_distance(A, B, decimals=1):
+    def get_distance(A, B, decimals=5):
         dist = np.linalg.norm(np.array(list(A)) - np.array(list(B)))
         return round(dist, decimals)
 
