@@ -32,29 +32,22 @@ class JohnsonSP:
 
     def dist_path_by_astar(self, v, heuristic=None, paths=None):
         for u_i in self.G:
-            self.astar_path(self.G, v, u_i, heuristic, paths=paths)
+            self.astar_path(self.G, v, u_i, heuristic)
 
     def get_path_by_dijkstra(self):
         return {v: self.dist_path_by_dijkstra(v) for v in self.G}
 
     def get_path_by_astar(self, heuristic=None):
-        paths = np.empty((len(self.G), len(self.G)), dtype=list)
-        for v in self.G:
-            self.dist_path_by_astar(v, heuristic, paths=paths)
-        # print(paths)
-        return
-        
-    def astar_path(self, G, source, target, heuristic=None, weight='weight', paths=None):
-        
-        if paths[target][source] != None:
-            return
-        
+        return {v: self.dist_path_by_astar(v, heuristic) for v in self.G}
+
+    def astar_path(self, G, source, target, heuristic=None, weight='weight'):
+
         if G.is_multigraph():
             raise NetworkXError("astar_path() not implemented for Multi(Di)Graphs")
 
         if heuristic is None:
             # The default heuristic is h=0 - same as Dijkstra's algorithm
-            def heuristic(G, u, v):
+            def heuristic(_, u, v):
                 return 0
 
         push = heappush
@@ -84,10 +77,8 @@ class JohnsonSP:
                 node = parent
                 while node is not None:
                     path.append(node)
-                    node = explored[node] 
+                    node = explored[node]
                 path.reverse()
-                paths[source][target] = path
-                #print(paths[target][source], paths[source][target])
                 return path
 
             if curnode in explored:
@@ -113,57 +104,3 @@ class JohnsonSP:
                 push(queue, (ncost + h, next(c), neighbor, ncost, curnode))
 
         raise nx.NetworkXNoPath("Node %s not reachable from %s" % (source, target))
-    
-    def _dijkstra(self, G, source, get_weight, pred=None, paths=None, cutoff=None,
-              target=None, heuristic=None):
-
-        if heuristic is None:
-            # The default heuristic is h=0 - same as Dijkstra's algorithm
-            def heuristic(G, u, v):
-                return 0
-        
-        G_succ = G.succ if G.is_directed() else G.adj
-
-        push = heappush
-        pop = heappop
-        dist = {}  # dictionary of final distances
-        seen = {source: 0}
-        c = count()
-        fringe = []  # use heapq with (distance,label) tuples
-        push(fringe, (0, next(c), source))
-        while fringe:
-            (d, _, v) = pop(fringe)
-            if v in dist:
-                continue  # already searched this node.
-            dist[v] = d
-            if v == target:
-                break
-
-            for u, e in G_succ[v].items():
-                cost = get_weight(v, u, e)
-                if cost is None:
-                    continue
-                vu_dist = dist[v] + get_weight(v, u, e)
-                if cutoff is not None:
-                    if vu_dist > cutoff:
-                        continue
-                if u in dist:
-                    if vu_dist < dist[u]:
-                        raise ValueError('Contradictory paths found:',
-                                         'negative weights?')
-                elif u not in seen or vu_dist < seen[u]:
-                    seen[u] = vu_dist
-                    push(fringe, (vu_dist, next(c), u))
-                    if paths is not None:
-                        paths[u] = paths[v] + [u]
-                    if pred is not None:
-                        pred[u] = [v]
-                elif vu_dist == seen[u]:
-                    if pred is not None:
-                        pred[u].append(v)
-
-        if paths is not None:
-            return (dist, paths)
-        if pred is not None:
-            return (pred, dist)
-        return dist

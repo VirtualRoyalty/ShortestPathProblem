@@ -116,16 +116,15 @@ class StressTest:
             print("floyd: {} \njohnson: {}\n len: {} {} \n".format(floyd_shortest_path, johnson_shortest_path, floyd_path_length, johnson_path_lenght, ))
         return round(floyd_path_length, 1), round(johnson_path_lenght, 1)
 
-    @staticmethod
-    def is_equal_path_length(G, floyd_dist, floyd_shortest_paths, johnson_shortest_paths):
+    def is_equal_path_length(self, floyd_dist, floyd_shortest_paths, johnson_shortest_paths):
         # find collision
-        for i in range(len(G)):
-            for j in range(len(G)):
+        for i in range(len(self.G)):
+            for j in range(len(self.G)):
                 if floyd_shortest_paths[i][j] != johnson_shortest_paths[i][j]:
                     # print(floyd_shortest_paths[i][j], johnson_shortest_paths[i][j])
 
                     floyd_path_length, johnson_path_lenght = \
-                    self.get_path_lengths(G, floyd_shortest_paths[i][j], floyd_dist, johnson_shortest_paths[i][j])
+                    self.get_path_lengths(self.G, floyd_shortest_paths[i][j], floyd_dist, johnson_shortest_paths[i][j])
                     # print("lens:", floyd_path_length, johnson_path_lenght)
                     return floyd_path_length == johnson_path_lenght
 
